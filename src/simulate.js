@@ -11,6 +11,10 @@ var launchServer = function(opts) {
     })
 };
 
+var closeServer = function() {
+    return simulateServer.server && simulateServer.server.close();
+};
+
 var launchBrowser = function(target, url) {
     return cordovaServe.launchBrowser({ target: target, url: url });
 };
@@ -29,7 +33,7 @@ var simulate = function(opts) {
             return launchBrowser(target, simHostUrl);
         }).catch(function(error) {
             // Ensure server is closed, then rethrow so it can be handled by downstream consumers.
-            simulateServer.server && simulateServer.server.close();
+            closeServer();
             if (error instanceof Error) {
                 throw error;
             } else {
@@ -41,3 +45,4 @@ var simulate = function(opts) {
 module.exports = simulate;
 module.exports.launchBrowser = launchBrowser;
 module.exports.launchServer = launchServer;
+module.exports.closeServer = closeServer;
